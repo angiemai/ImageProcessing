@@ -1,5 +1,6 @@
 import json
 import boto3
+import os
 from botocore.client import Config
 
 """
@@ -16,12 +17,12 @@ class AwsBucketApi:
             self.bucket_name    : AWS Bucket name for using other functions
             self.bucket         : Boto3 S3 client object for using other functions.
         """
-        settings = self.get_settings()
-        self.bucket_name = bucket_name or settings.get("bucket_name")
+        # settings = self.get_settings()
+        self.bucket_name =  bucket_name or os.getenv('AWS_BUCKET_NAME')  #settings.get("bucket_name")
         self.bucket  = boto3.client("s3", 
-            aws_access_key_id = settings.get("user_access_id"),
-            aws_secret_access_key = settings.get("user_secret"),
-            region_name = settings.get("bucket_region"),
+            aws_access_key_id = os.getenv('AWS_ACCESS_KEY_ID'),  #settings.get("user_access_id"),
+            aws_secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY'),  #settings.get("user_secret"),
+            region_name = os.getenv('AWS_DEFAULT_REGION'),  # settings.get("bucket_region"),
             config = Config(signature_version='s3v4', s3 = {"addressing_style" : "path"})
         )
 
